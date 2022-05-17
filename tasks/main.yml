@@ -17,8 +17,8 @@
     state: present
     backup: yes
   with_items:
-    - regexp: "^umask 002"
-      line: "umask {{ umask }}"
+    - regexp: "^       umask 002"
+      line: "       umask {{ umask }}"
 
 - name: "Configure profile configuration file"
   ansible.builtin.lineinfile:
@@ -28,6 +28,6 @@
     state: present
     backup: yes
   with_items:
-    - regexp: "^umask 022"
-      line: "umask {{ umask }}"
+    - regexp: "^       umask 002"
+      line: "       umask {{ umask }}"
 
