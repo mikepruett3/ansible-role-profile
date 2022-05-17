@@ -1,2 +1,33 @@
 ---
 # tasks file for ansible-role-profile
+
+- name: "Include OS-specific variables"
+  include_vars: "{{ ansible_os_family }}.yaml"
+
+#- name: "Gather the package facts"
+#  ansible.builtin.package_facts:
+#    manager: auto
+#  when: ansible_facts.packages is not defined
+
+- name: "Configure bashrc configuration file"
+  ansible.builtin.lineinfile:
+    dest: "{{ bashrc }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backup: yes
+  with_items:
+    - regexp: "^umask 002"
+      line: "umask {{ umask }}"
+
+- name: "Configure profile configuration file"
+  ansible.builtin.lineinfile:
+    dest: "{{ profile }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backup: yes
+  with_items:
+    - regexp: "^umask 022"
+      line: "umask {{ umask }}"
+
