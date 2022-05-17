@@ -28,6 +28,6 @@
     state: present
     backup: yes
   with_items:
-    - regexp: "^       umask 022"
+    - regexp: "^    umask 022"
       line: "    umask {{ umask }}"
 
