@@ -1,5 +1,7 @@
 ---
 # Debian vars file for ansible-role-profile
 
-profile: /etc/profile
-bashrc: /etc/bashrc
+login_defs: /etc/login.defs
+bashrc: /etc/bash.bashrc
+cshrc: /etc/csh.cshrc
+adduser_conf: /etc/adduser.conf

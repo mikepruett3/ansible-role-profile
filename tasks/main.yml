@@ -17,7 +17,7 @@
     state: present
     backup: yes
   with_items:
-    - regexp: "^       umask 002"
+    - regexp: ^[\s]*umask.*\b.*$
       line: "       umask {{ umask }}"
 
 - name: "Configure profile configuration file"
@@ -28,6 +28,53 @@
     state: present
     backup: yes
   with_items:
-    - regexp: "^    umask 022"
+    - regexp: ^[\s]*umask.*\b.*$
       line: "    umask {{ umask }}"
+  when: ansible_os_family == 'RedHat'
 
+- name: "Configure login.defs configuration file (Debian)"
+  ansible.builtin.lineinfile:
+    dest: "{{ login_defs }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backup: yes
+  with_items:
+    - regexp: ^[\s]*UMASK.*\b.*$
+      line: "UMASK           {{ umask }}"
+    - regexp: ^[\s]*HOME_MODE.*\b.*$
+      line: "HOME_MODE       0750"
+  when: ansible_os_family == 'Debian'
+
+- name: "Configure cshrc configuration file (Debian)"
+  ansible.builtin.lineinfile:
+    dest: "{{ cshrc }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backup: yes
+  with_items:
+    - regexp: ^[\s]*umask.*\b.*$
+      line: "UMASK           {{ umask }}"
+  when: ansible_os_family == 'Debian'
+
+- name: "Configure idle session termination configuration file (Debian)"
+  ansible.builtin.template:
+    src: timeout.j2
+    dest: "/etc/profile.d/tmout.sh"
+    owner: root
+    group: root
+    mode: '0644'
+  when: ansible_os_family == 'Debian'
+
+- name: "Configure default permissions for users home directories (Debian)"
+  ansible.builtin.lineinfile:
+    dest: "{{ adduser_conf }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backup: yes
+  with_items:
+    - regexp: ^[\s]*DIR_MODE.*\b.*$
+      line: "DIR_MODE={{ dirmode }}"
+  when: ansible_os_family == 'Debian'

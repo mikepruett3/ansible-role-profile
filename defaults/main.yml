@@ -1,4 +1,6 @@
 ---
 # defaults file for ansible-role-profile
 
-umask: "077"
+umask: 027
+idle_timeout: 600
+dirmode: 0750
