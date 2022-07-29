@@ -46,6 +46,12 @@
       line: "HOME_MODE       0750"
   when: ansible_os_family == 'Debian'
 
+- name: "Check if cshrc configuration file already exist (Debian)"
+  ansible.builtin.stat:
+    path: "{{ cshrc }}"
+  register: cshrc_config
+  when: ansible_os_family == 'Debian'
+
 - name: "Configure cshrc configuration file (Debian)"
   ansible.builtin.lineinfile:
     dest: "{{ cshrc }}"
@@ -56,7 +62,20 @@
   with_items:
     - regexp: ^[\s]*umask.*\b.*$
       line: "UMASK           {{ umask }}"
-  when: ansible_os_family == 'Debian'
+  when:
+    - cshrc_config.stat.exists == True
+    - ansible_os_family == 'Debian'
+
+- name: "Deploy cshrc configuration file (Debian)"
+  ansible.builtin.template:
+    src: cshrc.j2
+    dest: "{{ cshrc }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when:
+    - cshrc_config.stat.exists == False
+    - ansible_os_family == 'Debian'
 
 - name: "Configure idle session termination configuration file (Debian)"
   ansible.builtin.template:
