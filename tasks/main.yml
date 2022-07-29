@@ -19,6 +19,7 @@
   with_items:
     - regexp: ^[\s]*umask.*\b.*$
       line: "       umask {{ umask }}"
+  when: ansible_os_family == 'RedHat'
 
 - name: "Configure profile configuration file"
   ansible.builtin.lineinfile:
