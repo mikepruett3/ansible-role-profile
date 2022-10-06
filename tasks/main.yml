@@ -19,7 +19,7 @@
   with_items:
     - regexp: ^[\s]*umask.*\b.*$
       line: "       umask {{ umask }}"
-  when: ansible_facts['os_family'] 'RedHat'
+  when: ansible_facts['os_family'] == 'RedHat'
 
 - name: "Configure profile configuration file"
   ansible.builtin.lineinfile:
@@ -31,7 +31,7 @@
   with_items:
     - regexp: ^[\s]*umask.*\b.*$
       line: "    umask {{ umask }}"
-  when: ansible_facts['os_family'] 'RedHat'
+  when: ansible_facts['os_family'] == 'RedHat'
 
 - name: "Configure login.defs configuration file (Debian)"
   ansible.builtin.lineinfile:
@@ -45,13 +45,13 @@
       line: "UMASK           {{ umask }}"
     - regexp: ^[\s]*HOME_MODE.*\b.*$
       line: "HOME_MODE       0750"
-  when: ansible_facts['os_family'] 'Debian'
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: "Check if cshrc configuration file already exist (Debian)"
   ansible.builtin.stat:
     path: "{{ cshrc }}"
   register: cshrc_config
-  when: ansible_facts['os_family'] 'Debian'
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: "Configure cshrc configuration file (Debian)"
   ansible.builtin.lineinfile:
@@ -64,7 +64,7 @@
     - regexp: ^[\s]*umask.*\b.*$
       line: "UMASK           {{ umask }}"
   when:
-    - ansible_facts['os_family'] 'Debian'
+    - ansible_facts['os_family'] == 'Debian'
     - cshrc_config.stat.exists == True
 
 - name: "Deploy cshrc configuration file (Debian)"
@@ -75,7 +75,7 @@
     group: root
     mode: '0644'
   when:
-    - ansible_facts['os_family'] 'Debian'
+    - ansible_facts['os_family'] == 'Debian'
     - cshrc_config.stat.exists == False
 
 - name: "Configure idle session termination configuration file (Debian)"
@@ -85,7 +85,7 @@
     owner: root
     group: root
     mode: '0644'
-  when: ansible_facts['os_family'] 'Debian'
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: "Configure default permissions for users home directories (Debian)"
   ansible.builtin.lineinfile:
@@ -97,4 +97,4 @@
   with_items:
     - regexp: ^[\s]*DIR_MODE.*\b.*$
       line: "DIR_MODE={{ dirmode }}"
-  when: ansible_facts['os_family'] 'Debian'
+  when: ansible_facts['os_family'] == 'Debian'
