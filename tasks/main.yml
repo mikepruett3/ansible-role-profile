@@ -2,7 +2,8 @@
 # tasks file for ansible-role-profile
 
 - name: "Include OS-specific variables"
-  include_vars: "{{ ansible_os_family }}.yaml"
+  ansible.builtin.include_vars:
+    file: "{{ ansible_os_family }}.yaml"
 
 - name: "Include tasks from RedHat playbook"
   ansible.builtin.include_tasks: RedHat.yaml
