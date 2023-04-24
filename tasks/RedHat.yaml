@@ -9,12 +9,8 @@
     backup: yes
 
 - name: "Configure profile configuration file"
-  ansible.builtin.lineinfile:
-    dest: "{{ profile }}"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    state: present
+  ansible.builtin.replace:
+    path: "{{ profile }}"
+    regexp: '(?i)^(\s*umask\s.*)'
+    replace: "\tumask {{ umask }}"
     backup: yes
-  with_items:
-    - regexp: ^[\s]*umask.*\b.*$
-      line: "    umask {{ umask }}"
