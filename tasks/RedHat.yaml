@@ -6,7 +6,6 @@
     path: "{{ bashrc }}"
     regexp: '(?i)^(\s*umask\s.*)'
     replace: "\tumask {{ umask }}"
-    state: present
     backup: yes
 
 - name: "Configure profile configuration file"
