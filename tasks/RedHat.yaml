@@ -2,15 +2,12 @@
 # RedHat tasks file for ansible-role-profile
 
 - name: "Configure bashrc configuration file"
-  ansible.builtin.lineinfile:
-    dest: "{{ bashrc }}"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
+  ansible.builtin.replace:
+    path: "{{ bashrc }}"
+    regexp: '(?i)^(\s*umask\s.*)'
+    replace: "\tumask {{ umask }}"
     state: present
     backup: yes
-  with_items:
-    - regexp: ^[\s]*umask.*\b.*$
-      line: "       umask {{ umask }}"
 
 - name: "Configure profile configuration file"
   ansible.builtin.lineinfile:
