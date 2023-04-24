@@ -14,3 +14,10 @@
     regexp: '(?i)^(\s*umask\s.*)'
     replace: "\tumask {{ umask }}"
     backup: yes
+
+- name: "Configure login defaults configuration file"
+  ansible.builtin.replace:
+    path: "{{ login_defs }}"
+    regexp: '(?i)^(\s*UMASK\s.*)'
+    replace: "UMASK\t\t{{ umask }}"
+    backup: yes
